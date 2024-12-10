@@ -1,7 +1,11 @@
 {
-  "name": "portfolioyt",
-  "version": "0.1.0",
+  "name": "dev.mohammedhaydar.com",
+  "version": "1.0.0",
   "private": true,
+  "author": {
+    "name": "Mohammed Haydar",
+    "url": "https://mohammedhaydar.com"
+  },
   "scripts": {
     "dev": "next dev --turbopack --experimental-https",
     "build": "next build",
