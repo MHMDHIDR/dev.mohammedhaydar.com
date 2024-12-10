@@ -2,7 +2,8 @@ export const navbarData = [
   { title: "Home", href: "/" },
   { title: "Services", href: "/services" },
   { title: "Resume", href: "/resume" },
-  { title: "Projects", href: "/projects" }
+  { title: "Projects", href: "/projects" },
+  { title: "Blog", href: "/blog" }
 ]
 
 export const statsData = [

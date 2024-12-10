@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 const HomeDescription = () => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const description =
-    "sAs a Full Stack Developer, I design and build innovative software solutions, solve complex problems, and ensure systems are scalable and user-friendly. From creating web apps to optimizing backend systems, I bridge the gap between technology and user needs."
+    "Results-driven Frontend & Full Stack Developer with 8+ years of experience specializing in React.js, Next.js and modern web technologies. Proven track record of delivering high-performance web applications with a focus on code quality and team collaboration."
   const { displayedText, isComplete } = useTypeWriter(description, 30)
 
   useEffect(() => {

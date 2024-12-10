@@ -25,7 +25,7 @@ export default function Home() {
             </div>
           </div>
           <Link href="/projects">
-            <Button className="bg-transparent rounded-full border border-primary/50 text-primary hover:bg-primary hover:text-white hoverEffect h-11">
+            <Button className="bg-transparent rounded-full border border-primary/50 hover:bg-primary hover:text-white hoverEffect h-11">
               <Package /> My Projects
             </Button>
           </Link>
