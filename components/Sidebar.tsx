@@ -1,19 +1,19 @@
-import { useOutsideClick } from "@/hooks/use-outside-click";
-import { X } from "lucide-react";
-import React from "react";
-import Logo from "./Logo";
-import { navbarData } from "@/constants";
-import Link from "next/link";
-import SocialLinks from "./SocialLinks";
+import { useOutsideClick } from "@/hooks/use-outside-click"
+import { X } from "lucide-react"
+import React from "react"
+import { Logo } from "./Logo"
+import { navbarData } from "@/constants"
+import Link from "next/link"
+import SocialLinks from "./SocialLinks"
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  pathname: string;
+  isOpen: boolean
+  onClose: () => void
+  pathname: string
 }
 
 const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname }) => {
-  const sidebarRef = useOutsideClick<HTMLDivElement>(onClose);
+  const sidebarRef = useOutsideClick<HTMLDivElement>(onClose)
   return (
     <div
       ref={sidebarRef}
@@ -31,8 +31,10 @@ const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname }) => {
         </button>
       </div>
       <nav className="flex flex-col px-5 gap-7 text-sm uppercase tracking-wide font-medium mt-2">
-        <Logo title="John" subtitle="." />
-        {navbarData?.map((item) => (
+        <span className="flex gap-x-2 items-center">
+          <Logo /> Mohammed Ibrahim
+        </span>
+        {navbarData?.map(item => (
           <Link
             key={item?.title}
             href={item?.href}
@@ -45,18 +47,18 @@ const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname }) => {
           </Link>
         ))}
         <Link
-          href={"/resume.pdf"}
+          href={"/contact"}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm bg-lightSky/10 px-4 py-2 rounded-md border border-hoverColor/10 hover:border-hoverColor hover:bg-hoverColor hover:text-black hoverEffect"
           onClick={onClose}
         >
-          Hire me
+          Let's Talk
         </Link>
         <SocialLinks />
       </nav>
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

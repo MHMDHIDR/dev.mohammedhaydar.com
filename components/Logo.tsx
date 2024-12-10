@@ -1,30 +1,18 @@
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import React from "react";
+import { cn } from "@/lib/utils"
+import Image from "next/image"
+import Link from "next/link"
+import React from "react"
 
-interface Props {
-  className?: string;
-  title: string;
-  subtitle: string;
-}
-const Logo = ({ className, title, subtitle }: Props) => {
+export function Logo({ className }: { className?: string }) {
   return (
-    <div className="text-2xl group">
-      <Link href={"/"}>
-        <h2
-          className={cn(
-            "font-semibold tracking-wide hover:text-hoverColor hoverEffect",
-            className
-          )}
-        >
-          {title}{" "}
-          <span className="text-lightSky group-hover:text-white hoverEffect">
-            {subtitle}
-          </span>
-        </h2>
-      </Link>
-    </div>
-  );
-};
-
-export default Logo;
+    <Link href={"/"}>
+      <Image
+        src="/logo.svg"
+        width={25}
+        height={25}
+        alt="Mohammed Ibrahim"
+        className={cn("cursor-pointer", className)}
+      />
+    </Link>
+  )
+}
