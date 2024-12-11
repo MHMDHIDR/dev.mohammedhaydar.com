@@ -1,16 +1,19 @@
 "use client"
-import { navbarData } from "@/constants"
+
 import Container from "./Container"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { Menu } from "lucide-react"
 import Sidebar from "./Sidebar"
 import { useState } from "react"
 import { Logo } from "./Logo"
+import { usePathname } from "next/navigation"
+import { navbarData } from "@/constants"
+import { User } from "next-auth"
+import { signOut } from "next-auth/react"
 
-const Header = () => {
+export default function Header({ user }: { user: User | undefined }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname() || ""
 
   return (
     <header className="border-b border-b-hoverColor/20 bg-bodyColor text-white sticky top-0 z-50">
@@ -41,6 +44,22 @@ const Header = () => {
           >
             Hire me
           </Link>
+          {user && (
+            <>
+              <Link
+                href={"/dashboard"}
+                className="text-sm bg-lightSky/10 px-4 py-2 rounded-md hover:border-hoverColor hover:bg-hoverColor hover:text-black hoverEffect border border-lightSky/100"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={async () => await signOut()}
+                className="text-sm bg-red-500 px-4 py-2 rounded-md hover:bg-red-700 hoverEffect"
+              >
+                Sign out
+              </button>
+            </>
+          )}
         </div>
         <button
           aria-label="Toggle menu"
@@ -60,5 +79,3 @@ const Header = () => {
     </header>
   )
 }
-
-export default Header

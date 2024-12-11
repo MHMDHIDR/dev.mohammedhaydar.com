@@ -5,6 +5,8 @@ import Header from "@/components/Header"
 import PageTransition from "@/components/PageTransition"
 import StairTransition from "@/components/StairTransition"
 import { Toaster } from "@/components/ui/toaster"
+import Footer from "@/components/Footer"
+import { auth } from "@/auth"
 
 export const metadata: Metadata = {
   title: "Mohammed Ibrahim | A Full Stack Developer",
@@ -18,18 +20,22 @@ const raleway = localFont({
   weight: "100 900"
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await auth()
+  const user = session?.user
+
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased text-white/80`}>
-        <Header />
+        <Header user={user} />
         <StairTransition />
         <PageTransition>{children}</PageTransition>
         <Toaster />
+        <Footer />
       </body>
     </html>
   )
