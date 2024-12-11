@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Posts {
+model posts {
   id          String   @id @default(cuid()) @map("_id")
   title       String
   content     String
@@ -55,7 +55,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Posts         Posts[]
+  Posts         posts[]
 
   @@map("users")
 }
