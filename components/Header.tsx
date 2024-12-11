@@ -53,7 +53,7 @@ export default function Header({ user }: { user: User | undefined }) {
                 Dashboard
               </Link>
               <button
-                onClick={async () => await signOut()}
+                onClick={async () => await signOut({ redirectTo: "/" })}
                 className="text-sm bg-red-500 px-4 py-2 rounded-md hover:bg-red-700 hoverEffect"
               >
                 Sign out
