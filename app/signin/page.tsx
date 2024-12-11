@@ -1,5 +1,5 @@
-import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { auth, signIn } from "@/auth"
+import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { redirect } from "next/navigation"
 
 export default async function SignIn() {
@@ -10,6 +10,7 @@ export default async function SignIn() {
     redirect("/")
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSignIn: any = async () => {
     "use server"
     await signIn("google", { redirectTo: "/dashboard" })
