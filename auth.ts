@@ -1,11 +1,11 @@
-import { prisma } from "@/prisma"
+import { db } from "@/prisma"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth from "next-auth"
 import { notFound } from "next/navigation"
 import authConfig from "./auth.config"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(db),
   ...authConfig,
   callbacks: {
     async signIn({ user }) {
