@@ -5,9 +5,10 @@ export function BlogPosts() {
   const allBlogs = getBlogPosts()
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 p-10">
       {allBlogs
         .sort((a, b) => {
+          // Sort by date from newest to oldest
           if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
             return -1
           }
@@ -16,11 +17,11 @@ export function BlogPosts() {
         .map(post => (
           <Link
             key={post.slug}
-            className="flex flex-col space-y-1 mb-4"
+            className="p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
             href={`/blog/${post.slug}`}
           >
-            <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
-              <p className="text-lightSky dark:text-lightSky w-[100px] tabular-nums">
+            <div className="flex flex-col">
+              <p className="text-lightSky dark:text-lightSky w-full text-sm tabular-nums">
                 {formatDate(post.metadata.publishedAt, false)}
               </p>
               <p className="text-lightSky dark:text-lightSky tracking-tight">

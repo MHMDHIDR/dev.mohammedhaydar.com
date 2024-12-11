@@ -24,7 +24,7 @@ export default function Home() {
               <HomeDescription />
             </div>
           </div>
-          <Link href="/projects">
+          <Link href="/projects" className="my-3">
             <Button className="bg-transparent rounded-full border border-primary/50 hover:bg-primary hover:text-white hoverEffect h-11">
               <Package /> My Projects
             </Button>
