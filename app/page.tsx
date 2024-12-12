@@ -2,7 +2,6 @@ import Container from "@/components/Container"
 import HomeDescription from "@/components/HomeDescription"
 import Photo from "@/components/Photo"
 import SocialLinks from "@/components/SocialLinks"
-import Statistics from "@/components/Statistics"
 import { Button } from "@/components/ui/button"
 import { Package } from "lucide-react"
 import Link from "next/link"
@@ -30,7 +29,6 @@ export default function Home() {
             </Button>
           </Link>
           <SocialLinks />
-          <Statistics />
         </div>
 
         <Photo />

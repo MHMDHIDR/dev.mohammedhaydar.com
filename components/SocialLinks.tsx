@@ -2,50 +2,23 @@ import { Facebook, Github, Linkedin, Slack, Youtube } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip"
-
-const socialData = [
-  {
-    title: "Youtube",
-    icon: <Youtube />,
-    href: "https://www.youtube.com/@reactjsBD"
-  },
-  {
-    title: "Github",
-    icon: <Github />,
-    href: "https://www.youtube.com/@reactjsBD"
-  },
-  {
-    title: "Linkedin",
-    icon: <Linkedin />,
-    href: "https://www.youtube.com/@reactjsBD"
-  },
-  {
-    title: "Facebook",
-    icon: <Facebook />,
-    href: "https://www.youtube.com/@reactjsBD"
-  },
-  {
-    title: "Slack",
-    icon: <Slack />,
-    href: "https://www.youtube.com/@reactjsBD"
-  }
-]
+import { SOCIALS } from "@/constants"
 
 const SocialLinks = () => {
   return (
     <TooltipProvider>
       <div className="flex items-center gap-3">
-        {socialData?.map(item => (
-          <Tooltip key={item?.title}>
+        {SOCIALS.filter(social => social.active).map(social => (
+          <Tooltip key={social.linkTitle}>
             <TooltipTrigger asChild>
               <div className="text-blue-400 border border-primary/30 p-2.5 rounded-full hover:bg-primary/10 hover:border-primary hoverEffect">
-                <Link href={item?.href} target="_blank">
-                  <span>{item?.icon}</span>
+                <Link href={social?.href} target="_blank">
+                  <social.icon className="w-6 h-6" />
                 </Link>
               </div>
             </TooltipTrigger>
-            <TooltipContent className="bg-primary text-black font-semibold">
-              {item?.title}
+            <TooltipContent className="bg-primary font-semibold">
+              {social?.linkTitle}
             </TooltipContent>
           </Tooltip>
         ))}

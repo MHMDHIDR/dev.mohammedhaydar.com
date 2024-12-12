@@ -8,8 +8,8 @@ import { useState } from "react"
 import { Logo } from "./Logo"
 import { usePathname } from "next/navigation"
 import { navbarData } from "@/constants"
-import { User } from "next-auth"
 import { signOut } from "next-auth/react"
+import type { User } from "next-auth"
 
 export default function Header({ user }: { user: User | undefined }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -74,6 +74,7 @@ export default function Header({ user }: { user: User | undefined }) {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           pathname={pathname}
+          user={user}
         />
       </div>
     </header>

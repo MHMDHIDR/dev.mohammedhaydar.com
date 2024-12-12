@@ -5,14 +5,17 @@ import { Logo } from "./Logo"
 import { navbarData } from "@/constants"
 import Link from "next/link"
 import SocialLinks from "./SocialLinks"
+import type { User } from "next-auth"
+import { signOut } from "next-auth/react"
 
 interface Props {
   isOpen: boolean
   onClose: () => void
   pathname: string
+  user: User | undefined
 }
 
-const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname }) => {
+const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname, user }) => {
   const sidebarRef = useOutsideClick<HTMLDivElement>(onClose)
   return (
     <div
@@ -55,6 +58,22 @@ const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname }) => {
         >
           Let's Talk
         </Link>
+        {user && (
+          <>
+            <Link
+              href={"/dashboard"}
+              className="text-sm bg-lightSky/10 px-4 py-2 rounded-md hover:border-hoverColor hover:bg-hoverColor hover:text-black hoverEffect border border-lightSky/100"
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={async () => await signOut({ redirectTo: "/" })}
+              className="text-sm bg-red-500 px-4 py-2 rounded-md hover:bg-red-700 hoverEffect"
+            >
+              Sign out
+            </button>
+          </>
+        )}
         <SocialLinks />
       </nav>
     </div>
