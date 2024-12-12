@@ -28,7 +28,6 @@ export default async function Blogs() {
             id={post.id}
             title={post.title}
             publishedAt={String(post.publishedAt) || "Unknown Date"}
-            //dangerouslySetInnerHTML={{ __html: post.content }}
           />
         ))
       )}

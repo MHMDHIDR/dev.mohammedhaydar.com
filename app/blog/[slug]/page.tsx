@@ -1,14 +1,9 @@
 import { notFound } from "next/navigation"
-import { formatDate, getBlogPosts } from "@/app/blog/utils"
+import { formatDate } from "@/lib/format-date"
 import { baseUrl } from "@/app/sitemap"
-import { CustomMDX } from "@/app/components/mdx"
-import { BlogLayout } from "@/app/components/blog-layout"
 import type { Metadata } from "next"
-
-export async function generateStaticParams() {
-  const posts = getBlogPosts()
-  return posts.map(post => ({ slug: post.slug }))
-}
+import { getPostBySlug } from "@/app/data-access/posts/get-post-bySlug"
+import { BlogLayout } from "@/app/components/blog-layout"
 
 export async function generateMetadata({
   params
@@ -16,28 +11,28 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const post = getBlogPosts().find(post => post.slug === slug)
+  const post = await getPostBySlug({ slug })
   if (!post) return {}
 
-  const { title, publishedAt: publishedTime, summary: description, image } = post.metadata
-  const ogImage = image ? image : `${baseUrl}/og?title=${encodeURIComponent(title)}`
+  const { title, publishedAt } = post
+  // const ogImage = image ? image : `${baseUrl}/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
-    description,
+    description: title,
     openGraph: {
       title,
-      description,
+      description: title,
       type: "article",
-      publishedTime,
-      url: `${baseUrl}/blog/${post.slug}`,
-      images: [{ url: ogImage }]
+      publishedTime: String(new Date(publishedAt!.toISOString())),
+      url: `${baseUrl}/blog/${post.slug}`
+      // ,images: [{ url: ogImage }]
     },
     twitter: {
       card: "summary_large_image",
       title,
-      description,
-      images: [ogImage]
+      description: title
+      // ,images: [ogImage]
     }
   }
 }
@@ -48,22 +43,22 @@ export default async function BlogPost({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const post = getBlogPosts().find(post => post.slug === slug)
+  const post = await getPostBySlug({ slug })
 
   if (!post) {
     notFound()
   }
 
   return (
-    <BlogLayout pageTitle={post.metadata.title}>
+    <BlogLayout pageTitle={post.title}>
       <div className="flex justify-between items-center mt-2 mb-8 text-sm">
         <span className="text-neutral-600 dark:text-neutral-400">
-          {formatDate(post.metadata.publishedAt)}
+          {formatDate(String(post.publishedAt))}
         </span>
       </div>
 
-      <article className="prose dark:prose-invert">
-        <CustomMDX source={post.content} />
+      <article id="article" role="article" className="prose mx-auto mt-8 max-w-3xl">
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </article>
     </BlogLayout>
   )

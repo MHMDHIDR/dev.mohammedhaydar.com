@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { formatDate } from "@/app/blog/utils"
+import { formatDate } from "@/lib/format-date"
 import { CalendarClock } from "lucide-react"
 
 interface CardProps {
@@ -7,10 +7,9 @@ interface CardProps {
   title: string
   slug?: string
   publishedAt: string
-  description?: string
 }
 
-export function BlogPostCard({ id, title, slug, publishedAt, description }: CardProps) {
+export function BlogPostCard({ id, title, slug, publishedAt }: CardProps) {
   return (
     <li className="my-6">
       <Link
@@ -25,7 +24,6 @@ export function BlogPostCard({ id, title, slug, publishedAt, description }: Card
           {formatDate(publishedAt)}
         </time>
       </div>
-      {description && <p className="mt-2">{description}</p>}
     </li>
   )
 }

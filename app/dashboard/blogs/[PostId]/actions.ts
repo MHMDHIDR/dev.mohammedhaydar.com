@@ -1,6 +1,7 @@
 "use server"
 
 import { auth } from "@/auth"
+import { slugify } from "@/lib/slugify"
 import { db } from "@/prisma"
 import { AuthError } from "next-auth"
 
@@ -21,12 +22,13 @@ export async function editPost(formData: FormData, postId: string) {
     content: formData.get("content") as string,
     published: formData.get("published") === "true"
   }
+  const slug = slugify(data.title)
 
   try {
     // Create a new blog post
     const updatedPost = await db.posts.update({
       where: { id: postId },
-      data: { ...data, authorId: user.id }
+      data: { ...data, slug, authorId: user.id }
     })
     return updatedPost.id
   } catch (error) {

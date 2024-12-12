@@ -10,6 +10,7 @@ datasource db {
 model posts {
   id          String    @id @default(cuid()) @map("_id")
   title       String
+  slug        String
   content     String
   published   Boolean
   author      User      @relation(fields: [authorId], references: [id])
