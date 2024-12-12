@@ -3,17 +3,18 @@ import { formatDate } from "@/app/blog/utils"
 import { CalendarClock } from "lucide-react"
 
 interface CardProps {
+  id?: string
   title: string
-  slug: string
+  slug?: string
   publishedAt: string
   description?: string
 }
 
-export function BlogPostCard({ title, slug, publishedAt, description }: CardProps) {
+export function BlogPostCard({ id, title, slug, publishedAt, description }: CardProps) {
   return (
     <li className="my-6">
       <Link
-        href={`/blog/${slug}`}
+        href={id ? `/dashboard/blogs/${id}` : `/blog/${slug}`}
         className="inline-block text-lg font-medium text-blue-600 decoration-dashed underline-offset-4 hover:underline"
       >
         <h2 className="text-lg font-medium hover:underline">{title}</h2>

@@ -1,13 +1,15 @@
-import { getBlogPosts } from "@/app/data-access/get-posts"
+import { getBlogPosts } from "@/app/data-access/posts/get-posts"
 import NoItems from "@/components/NoItems"
 import { Button } from "@/components/ui/button"
+import Container from "@/components/Container"
 import Link from "next/link"
+import { BlogPostCard } from "@/components/Card"
 
 export default async function Blogs() {
   const { blogs: blogPosts, count } = await getBlogPosts()
 
   return (
-    <div>
+    <Container>
       {!count ? (
         <NoItems>
           <div className="space-y-4">
@@ -21,12 +23,15 @@ export default async function Blogs() {
         </NoItems>
       ) : (
         blogPosts.map(post => (
-          <div key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-          </div>
+          <BlogPostCard
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            publishedAt={String(post.publishedAt) || "Unknown Date"}
+            //dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         ))
       )}
-    </div>
+    </Container>
   )
 }

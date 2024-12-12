@@ -8,13 +8,13 @@ datasource db {
 }
 
 model posts {
-  id          String   @id @default(cuid()) @map("_id")
+  id          String    @id @default(cuid()) @map("_id")
   title       String
   content     String
   published   Boolean
-  author      User     @relation(fields: [authorId], references: [id])
+  author      User      @relation(fields: [authorId], references: [id])
   authorId    String
-  publishedAt DateTime
+  publishedAt DateTime? @default(now())
 }
 
 model Account {

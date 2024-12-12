@@ -1,28 +1,52 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
 import { Image } from "@tiptap/extension-image"
 import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
 import Container from "@/components/Container"
-import { createPost } from "./actions"
-import { useRouter } from "next/navigation"
+import { editPost } from "./actions"
+import { useParams, useRouter } from "next/navigation"
+import { getPostById } from "@/app/data-access/posts/get-post-byId"
 
-export default function NewBlogPost() {
+export default function EditBlogPost() {
+  const { postId } = useParams<{ postId: string }>() as { postId: string }
+
   const { push } = useRouter()
+
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [published, setPublished] = useState(false)
 
   const editor = useEditor({
     extensions: [StarterKit, Image],
-    content: "",
+    content,
     editorProps: { attributes: { class: "min-h-72 p-3" } },
-    onUpdate: ({ editor }) => setContent(editor.getHTML())
+    onUpdate: ({ editor }) => {
+      const newContent = editor.getHTML()
+      setContent(newContent)
+    },
+    immediatelyRender: false
   })
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const post = await getPostById({ postId })
+      if (!post) return
+
+      setTitle(post.title)
+      setContent(post.content)
+      setPublished(post.published)
+
+      if (editor) {
+        editor.commands.setContent(post.content)
+      }
+    }
+    fetchPost()
+  }, [postId, editor])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,8 +57,8 @@ export default function NewBlogPost() {
     formData.append("published", published ? "true" : "false")
 
     try {
-      const newPost = await createPost(formData)
-      push(`/dashboard/blogs/${newPost}`)
+      const editedPostId = await editPost(formData, postId)
+      push(`/dashboard/blogs/${editedPostId}`)
     } catch (error) {
       console.error("Error creating post", error)
     }
@@ -78,7 +102,7 @@ export default function NewBlogPost() {
             />
           </label>
         </div>
-        <Button>Add Post</Button>
+        <Button>Update Post</Button>
       </form>
     </Container>
   )
