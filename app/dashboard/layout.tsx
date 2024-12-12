@@ -15,7 +15,7 @@ export default async function DashboardLayout({
   ) : (
     <>
       <LayoutSidebar user={user} />
-      {children}
+      <main className="md:mt-20">{children}</main>
     </>
   )
 }

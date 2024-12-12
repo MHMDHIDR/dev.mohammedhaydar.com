@@ -1,4 +1,5 @@
 "use client"
+
 import PageLayout from "@/components/PageLayout"
 import {
   Carousel,
@@ -59,7 +60,7 @@ const projects = [
   }
 ]
 
-const WorkPage = () => {
+export default function Project() {
   return (
     <div className="py-6 md:py-12">
       <PageLayout>
@@ -162,5 +163,3 @@ const WorkPage = () => {
     </div>
   )
 }
-
-export default WorkPage
