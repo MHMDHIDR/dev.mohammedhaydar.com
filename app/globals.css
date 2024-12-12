@@ -63,6 +63,9 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply scroll-smooth;
+  }
   body {
     @apply bg-bodyColor text-foreground;
   }
@@ -74,6 +77,87 @@
   }
   .text-outline-hover {
     -webkit-text-stroke: 1px #00ff99;
+  }
+}
+
+@layer base {
+  .prose {
+    @apply prose-h3:italic
+    prose-p:text-gray-100
+    prose-a:text-gray-100
+    prose-a:decoration-dashed
+    prose-a:underline-offset-8
+    hover:prose-a:text-primary
+    prose-blockquote:border-l-primary
+    prose-blockquote:border-opacity-50
+    prose-blockquote:opacity-80
+    prose-figcaption:text-gray-100
+    prose-figcaption:opacity-70
+    prose-strong:text-gray-100
+    prose-code:rounded
+    prose-code:bg-primary
+    prose-code:bg-opacity-75
+    prose-code:p-1
+    prose-code:before:!content-none
+    prose-code:after:!content-none
+    prose-ol:text-gray-100
+    prose-ul:overflow-x-clip
+    prose-ul:text-gray-100
+    prose-li:marker:text-primary
+    prose-table:text-gray-100
+    prose-th:border
+    prose-th:border-border
+    prose-td:border
+    prose-td:border-border
+    prose-img:my-2
+    prose-img:mx-auto
+    prose-img:border-2
+    prose-img:border-border
+    prose-hr:border-border;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply text-white;
+  }
+
+  .prose a {
+    @apply break-words hover:text-primary text-white;
+  }
+  .prose thead th:first-child,
+  tbody td:first-child,
+  tfoot td:first-child {
+    padding-left: 0.5714286em;
+  }
+  .prose h2#table-of-contents {
+    @apply mb-2 text-white;
+  }
+  .prose details {
+    @apply inline-block cursor-pointer select-none text-white;
+  }
+  .prose summary {
+    @apply focus:outline;
+  }
+  .prose h2#table-of-contents + p {
+    @apply hidden;
+  }
+  code,
+  blockquote {
+    word-wrap: break-word;
+  }
+
+  pre > code {
+    white-space: pre;
+  }
+}
+
+@layer base {
+  [id] {
+    @apply scroll-mt-20 md:scroll-mt-24 lg:scroll-mt-32;
   }
 }
 

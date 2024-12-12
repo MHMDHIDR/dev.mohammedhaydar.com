@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss"
 import defaultTheme from "tailwindcss/defaultTheme"
+import typography from "@tailwindcss/typography"
 
 export default {
   darkMode: ["class"],
@@ -12,6 +13,18 @@ export default {
     extend: {
       fontFamily: {
         sans: ["JetBrains Mono", ...defaultTheme.fontFamily.sans]
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            pre: {
+              color: false
+            },
+            code: {
+              color: false
+            }
+          }
+        }
       },
       colors: {
         bodyColor: "#1c1c22",
@@ -75,5 +88,5 @@ export default {
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  plugins: [typography, require("tailwindcss-animate")]
 } satisfies Config
