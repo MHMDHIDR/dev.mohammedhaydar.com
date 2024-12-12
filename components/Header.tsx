@@ -74,6 +74,7 @@ export default function Header({ user }: { user: User | undefined }) {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
           pathname={pathname}
+          navbarData={navbarData}
           user={user}
         />
       </div>

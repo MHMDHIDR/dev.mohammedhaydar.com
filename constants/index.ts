@@ -14,6 +14,12 @@ export const navbarData = [
   { title: "Blog", href: "/blog" }
 ]
 
+export const dashboardNavbarData = [
+  { title: "Dashboard", href: "/dashboard" },
+  { title: "Blogs", href: "/dashboard/blog" },
+  { title: "Settings", href: "/dashboard/settings" }
+]
+
 export const statsData = [
   { num: 12, title: "Years of experience" },
   { num: 25, title: "Projects completed" },

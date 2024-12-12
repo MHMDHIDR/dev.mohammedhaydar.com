@@ -2,27 +2,44 @@ import { useOutsideClick } from "@/hooks/use-outside-click"
 import { X } from "lucide-react"
 import React from "react"
 import { Logo } from "./Logo"
-import { navbarData } from "@/constants"
 import Link from "next/link"
 import SocialLinks from "./SocialLinks"
 import type { User } from "next-auth"
 import { signOut } from "next-auth/react"
+import clsx from "clsx"
 
-interface Props {
-  isOpen: boolean
+type SidebarProps = {
+  isOpen?: boolean
   onClose: () => void
   pathname: string
   user: User | undefined
+  navbarData: { title: string; href: string }[]
+  side?: "left" | "right"
 }
 
-const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname, user }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen = false,
+  onClose,
+  pathname,
+  navbarData,
+  user,
+  side = "right"
+}) => {
   const sidebarRef = useOutsideClick<HTMLDivElement>(onClose)
+
   return (
     <div
       ref={sidebarRef}
-      className={`fixed inset-y-0 right-0 z-50 min-w-72 max-w-96 bg-bodyColor border-l border-l-hoverColor/50 shadow-xl transform ${
-        isOpen ? "translate-x-0" : "translate-x-full"
-      } transition-transform duration-300 ease-in-out`}
+      className={clsx(
+        "fixed inset-y-0 z-50 min-w-72 max-w-96 bg-bodyColor border-l border-l-hoverColor/50 shadow-xl transform transition-transform duration-300 ease-in-out",
+        {
+          "translate-x-0": isOpen,
+          "translate-x-full": !isOpen && side === "right",
+          "-translate-x-full": !isOpen && side === "left",
+          "left-0": side === "left",
+          "right-0": side === "right"
+        }
+      )}
     >
       <div className="flex justify-end p-4">
         <button
@@ -37,16 +54,16 @@ const Sidebar: React.FC<Props> = ({ isOpen, onClose, pathname, user }) => {
         <span className="flex gap-x-2 items-center">
           <Logo /> Mohammed Ibrahim
         </span>
-        {navbarData?.map(item => (
+        {navbarData.map(item => (
           <Link
-            key={item?.title}
-            href={item?.href}
+            key={item.title}
+            href={item.href}
             className={`hover:text-hoverColor hoverEffect ${
-              pathname === item?.href && "text-hoverColor"
+              pathname === item.href && "text-hoverColor"
             }`}
             onClick={onClose}
           >
-            {item?.title}
+            {item.title}
           </Link>
         ))}
         <Link
