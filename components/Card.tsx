@@ -11,7 +11,7 @@ interface CardProps {
 
 export function BlogPostCard({ id, title, slug, publishedAt }: CardProps) {
   return (
-    <li className="my-6">
+    <li className="my-6 list-none">
       <Link
         href={id ? `/dashboard/blogs/${id}` : `/blog/${slug}`}
         className="inline-block text-lg font-medium text-blue-600 decoration-dashed underline-offset-4 hover:underline"

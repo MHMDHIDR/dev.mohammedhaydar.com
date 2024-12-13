@@ -20,8 +20,9 @@ export default function NewBlogPost() {
   const editor = useEditor({
     extensions: [StarterKit, Image],
     content: "",
-    editorProps: { attributes: { class: "min-h-72 p-3" } },
-    onUpdate: ({ editor }) => setContent(editor.getHTML())
+    editorProps: { attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto" } },
+    onUpdate: ({ editor }) => setContent(editor.getHTML()),
+    immediatelyRender: false
   })
 
   const handleSubmit = async (e: React.FormEvent) => {

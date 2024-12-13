@@ -1,10 +1,10 @@
-import PageLayout from "@/components/PageLayout";
-import Title from "@/components/Title";
-import { Separator } from "@/components/ui/separator";
-import { servicesData } from "@/constants";
-import { ArrowUp } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import PageLayout from "@/components/PageLayout"
+import Title from "@/components/Title"
+import { Separator } from "@/components/ui/separator"
+import { servicesData } from "@/constants"
+import { ArrowUp } from "lucide-react"
+import Link from "next/link"
+import React from "react"
 
 const ServicesPage = () => {
   return (
@@ -12,7 +12,7 @@ const ServicesPage = () => {
       <PageLayout>
         <Title>Services I Provide</Title>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-12">
-          {servicesData?.map((item) => (
+          {servicesData?.map(item => (
             <div
               key={item?._id}
               className="flex flex-col p-6 bg-lightSky/5 border border-lightSky/20 hover:border-lightSky/30 rounded-lg shadow-md group hover:shadow-lg gap-2.5 hoverEffect"
@@ -33,7 +33,7 @@ const ServicesPage = () => {
         </div>
       </PageLayout>
     </section>
-  );
-};
+  )
+}
 
-export default ServicesPage;
+export default ServicesPage

@@ -11,6 +11,7 @@ import Container from "@/components/Container"
 import { editPost } from "./actions"
 import { useParams, useRouter } from "next/navigation"
 import { getPostById } from "@/app/data-access/posts/get-post-byId"
+import AddBlogButton from "@/app/components/add-blog-btn"
 
 export default function EditBlogPost() {
   const { postId } = useParams<{ postId: string }>() as { postId: string }
@@ -24,7 +25,7 @@ export default function EditBlogPost() {
   const editor = useEditor({
     extensions: [StarterKit, Image],
     content,
-    editorProps: { attributes: { class: "min-h-72 p-3" } },
+    editorProps: { attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto" } },
     onUpdate: ({ editor }) => {
       const newContent = editor.getHTML()
       setContent(newContent)
@@ -48,7 +49,7 @@ export default function EditBlogPost() {
     fetchPost()
   }, [postId, editor])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleEditButton = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const formData = new FormData()
@@ -66,7 +67,8 @@ export default function EditBlogPost() {
 
   return !editor ? null : (
     <Container>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <AddBlogButton />
+      <form onSubmit={handleEditButton} className="space-y-4 mt-4">
         <div>
           <label htmlFor="title">
             Title:

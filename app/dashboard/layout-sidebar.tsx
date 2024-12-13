@@ -16,7 +16,7 @@ export default function LayoutSidebar({ user }: { user: User | undefined }) {
       <button
         aria-label="Toggle menu"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed bottom-0 md:top-20 max-h-fit hover:text-hoverColor hoverEffect w-full bg-primary/50 py-2"
+        className="fixed bottom-0 md:top-16 max-h-fit hover:text-hoverColor hoverEffect w-full bg-primary/90 py-2 z-50"
       >
         <Menu className="ml-auto mr-4" />
       </button>
