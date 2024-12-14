@@ -1,11 +1,14 @@
+"use server"
+
+import { env } from "@/env"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import crypto from "crypto"
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
+  region: env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY
   }
 })
 
@@ -26,7 +29,7 @@ export async function uploadToS3(file: File, postId: string) {
     await s3Client.send(command)
 
     // Construct public URL (adjust based on your S3 bucket configuration)
-    const imageUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${filename}`
+    const imageUrl = `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${filename}`
 
     return imageUrl
   } catch (error) {

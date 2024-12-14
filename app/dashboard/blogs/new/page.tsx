@@ -4,12 +4,13 @@ import { Input } from "@/components/ui/input"
 import { useState, useRef } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
-import { Image } from "@tiptap/extension-image"
+import { Image as TipTapImage } from "@tiptap/extension-image"
 import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
 import { createPost, updatePostContent } from "./actions"
 import { useRouter } from "next/navigation"
 import { uploadToS3 } from "@/lib/s3-upload"
+import Image from "next/image"
 
 export default function NewBlogPost() {
   const { push } = useRouter()
@@ -25,7 +26,7 @@ export default function NewBlogPost() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
-    extensions: [StarterKit, Image.configure({ inline: true, allowBase64: true })],
+    extensions: [StarterKit, TipTapImage.configure({ inline: true, allowBase64: true })],
     content: "",
     editorProps: { attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto" } },
     onUpdate: ({ editor }) => setContent(editor.getHTML()),
@@ -55,30 +56,24 @@ export default function NewBlogPost() {
     e.preventDefault()
 
     try {
-      // Create post first to get ID
       const newPostId = await createPost()
 
-      // Upload images to S3
       const imageUrls = await Promise.all(
         uploadedImages.map(img => uploadToS3(img.file, newPostId))
       )
 
-      // Prepare form data
       const formData = new FormData()
       formData.append("title", title)
       formData.append("content", content)
       formData.append("published", published ? "true" : "false")
 
-      // Replace temporary image URLs with S3 URLs
       let updatedContent = content
       uploadedImages.forEach((img, index) => {
         updatedContent = updatedContent.replace(img.preview, imageUrls[index])
       })
 
-      // Update post with final content
       await updatePostContent(newPostId, title, updatedContent)
 
-      // Redirect to new post
       push(`/dashboard/blogs/${newPostId}`)
     } catch (error) {
       console.error("Error creating post", error)
@@ -128,13 +123,14 @@ export default function NewBlogPost() {
         </label>
       </div>
 
-      {/* Optional: Preview uploaded images */}
       <div className="flex gap-2">
         {uploadedImages.map((img, index) => (
-          <img
+          <Image
             key={index}
             src={img.preview}
             alt={`Preview ${index}`}
+            width={80}
+            height={80}
             className="w-20 h-20 object-cover rounded-md"
           />
         ))}
