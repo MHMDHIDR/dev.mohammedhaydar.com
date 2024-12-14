@@ -8,9 +8,6 @@ import {
   CarouselNext,
   CarouselPrevious
 } from "@/components/ui/carousel"
-import projectOne from "@/images/projectOne.png"
-import projectTwo from "@/images/projectTwo.png"
-import projectThree from "@/images/projectThree.png"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
 import { Separator } from "@/components/ui/separator"
@@ -23,42 +20,7 @@ import {
 import Link from "next/link"
 import { ArrowUpRight, Github } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
-const projects = [
-  {
-    id: "01",
-    title: "E-commerce Platform",
-    category: "Full Stack",
-    description:
-      "A modern e-commerce platform built with Next.js, featuring a responsive design, user authentication, and integration with a headless CMS for easy content management.",
-    stack: ["Next.js", "Tailwind CSS", "Strapi", "PostgreSQL"],
-    image: projectOne,
-    liveUrl: "https://ecommerceapp.reactbd.com/",
-    githubUrl: "https://github.com/noorjsdivs/"
-  },
-  {
-    id: "02",
-    title: "Task Management App",
-    category: "Frontend",
-    description:
-      "A sleek task management application that helps users organize their daily activities, set priorities, and track progress. Built with React and Redux for state management.",
-    stack: ["React", "Redux", "Styled Components", "Firebase"],
-    image: projectTwo,
-    liveUrl: "https://ecommerceapp.reactbd.com/",
-    githubUrl: "https://github.com/noorjsdivs/"
-  },
-  {
-    id: "03",
-    title: "Weather Forecast Dashboard",
-    category: "Frontend",
-    description:
-      "An interactive weather forecast dashboard that provides real-time weather information and 5-day forecasts for multiple locations. Utilizes a third-party weather API.",
-    stack: ["Vue.js", "Vuex", "Chart.js", "OpenWeatherMap API"],
-    image: projectThree,
-    liveUrl: "https://ecommerceapp.reactbd.com/",
-    githubUrl: "https://github.com/noorjsdivs/"
-  }
-]
+import { projects } from "./projects"
 
 export default function Project() {
   return (
@@ -66,30 +28,30 @@ export default function Project() {
       <PageLayout>
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
           <CarouselContent>
-            {projects?.map(project => (
-              <CarouselItem key={project.id}>
+            {projects?.map((project, index) => (
+              <CarouselItem key={index}>
                 <Card className="bg-bodyColor border-lightSky/20">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:space-x-8 group">
                       <div className="w-full md:w-1/2 order-2 md:order-1 mb-8 md:mb-0">
                         <div className="space-y-3 md:space-y-6 mt-4 md:mt-0">
                           <h2 className="text-4xl md:text-8xl leading-none font-extrabold text-transparent text-outline select-none">
-                            {project?.id}
+                            {index + 1}
                           </h2>
                           <h3 className="text-xl md:text-3xl font-bold leading-none text-white group-hover:text-primary hoverEffect">
-                            {project?.category} project
+                            {project.category} project
                           </h3>
                           <p className="text-white/60 text-sm md:text-base leading-6 md:leading-normal">
-                            {project?.description}
+                            {project.description}
                           </p>
-                          <ul className="flex flex-wrap md:flex-nowrap gap-2 md:gap-4 items-center">
-                            {project?.stack?.map((item, index) => (
+                          <ul className="flex flex-wrap gap-2 md:gap-4 items-center">
+                            {project.stack?.map((item, index) => (
                               <li
                                 key={index}
                                 className="text-xs md:text-base text-primary/80 bg-primary/10 px-1.5 py-0.5 rounded-sm select-none"
                               >
                                 {item}
-                                {index !== project?.stack?.length - 1 && ","}
+                                {index !== project.stack?.length - 1 && ""}
                               </li>
                             ))}
                           </ul>
@@ -103,8 +65,8 @@ export default function Project() {
                                     size="icon"
                                     className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
                                   >
-                                    <Link href={project?.liveUrl}>
-                                      <ArrowUpRight />{" "}
+                                    <Link href={project.liveUrl}>
+                                      <ArrowUpRight />
                                       <span className="sr-only">View Live Project</span>
                                     </Link>
                                   </Button>
@@ -122,7 +84,7 @@ export default function Project() {
                                     size="icon"
                                     className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
                                   >
-                                    <Link href={project?.githubUrl}>
+                                    <Link href={project.githubUrl}>
                                       <Github />
                                       <span className="sr-only">
                                         View Github Repository
@@ -141,7 +103,7 @@ export default function Project() {
                       <div className="w-full md:w-1/2 order-1 md:order-2">
                         <div className="relative h-72 sm:h-96 bg-gray-700 rounded-lg overflow-hidden">
                           <Image
-                            src={project?.image}
+                            src={project.image}
                             alt={project.title}
                             fill
                             className="object-cover"

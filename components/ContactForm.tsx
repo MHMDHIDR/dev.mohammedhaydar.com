@@ -1,7 +1,8 @@
-"use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+"use client"
+
+import React, { ChangeEvent, FormEvent, useState } from "react"
+import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
 import {
   Select,
   SelectContent,
@@ -9,97 +10,90 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Button } from "./ui/button";
-import { useToast } from "@/hooks/use-toast";
-import SuccessMsg from "./SuccessMsg";
+  SelectValue
+} from "./ui/select"
+import { Button } from "./ui/button"
+import { useToast } from "@/hooks/use-toast"
+import SuccessMsg from "./SuccessMsg"
+import { services } from "@/app/services/services"
 
 const ContactForm = () => {
-  const { toast } = useToast();
-  const [status, setStatus] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
+  const [status, setStatus] = useState("")
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     Name: "",
     Email: "",
     Phone: "",
     Address: "",
     Message: "",
-    Service: "",
-  });
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+    Service: ""
+  })
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
   const handleSelectChange = (value: string) => {
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
-      Service: value,
-    }));
-  };
+      Service: value
+    }))
+  }
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      setLoading(true);
+      setLoading(true)
       if (!formData.Name.trim() || !formData.Email.trim()) {
         toast({
           title: "Error: Something is wrong",
           description: "Please input your name and email to continue",
-          variant: "destructive",
-        });
-        return;
+          variant: "destructive"
+        })
+        return
       }
-      const form = new FormData();
-      const currentDateTime = new Date().toLocaleString();
-      form.append("Name", formData.Name);
-      form.append("Email", formData.Email);
-      form.append("Phone", formData.Phone);
-      form.append("Address", formData.Address);
-      form.append("Message", formData.Message);
-      form.append("Service", formData.Service);
-      form.append("DateTime", currentDateTime);
+      const form = new FormData()
+      const currentDateTime = new Date().toLocaleString()
+      form.append("Name", formData.Name)
+      form.append("Email", formData.Email)
+      form.append("Phone", formData.Phone)
+      form.append("Address", formData.Address)
+      form.append("Message", formData.Message)
+      form.append("Service", formData.Service)
+      form.append("DateTime", currentDateTime)
 
       const response = await fetch("", {
         method: "POST",
-        body: form,
-      });
+        body: form
+      })
       if (response?.ok) {
-        setSuccess(true);
-        setStatus("Success! Your message has been sent.");
+        setSuccess(true)
+        setStatus("Success! Your message has been sent.")
         setFormData({
           Name: "",
           Email: "",
           Phone: "",
           Address: "",
           Message: "",
-          Service: "",
-        });
+          Service: ""
+        })
       } else {
-        setStatus("Error! Unable to send your message.");
+        setStatus("Error! Unable to send your message.")
       }
     } catch (error) {
-      console.error("Data submitting Error", error);
-      setStatus("Error! Something went wrong.");
+      console.error("Data submitting Error", error)
+      setStatus("Error! Something went wrong.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   return (
     <div className="space-y-4">
-      <h3 className="text-2xl md:text-4xl text-lightSky">
-        Let&apos;s work together
-      </h3>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa aliquam
-        consequatur alias, amet voluptate error hic delectus. Temporibus
-        obcaecati facilis.
-      </p>
+      <h3 className="text-2xl md:text-4xl text-lightSky">Let&apos;s work together</h3>
+      <p>I'm looking forward to working with you!</p>
       <>
         {success ? (
           <SuccessMsg status={status} />
@@ -167,12 +161,11 @@ const ContactForm = () => {
               <SelectContent className="bg-bodyColor text-white border-white/20">
                 <SelectGroup>
                   <SelectLabel>Select a service</SelectLabel>
-                  <SelectItem value="Web Development">
-                    Web Development
-                  </SelectItem>
-                  <SelectItem value="SEO Management">SEO Management</SelectItem>
-                  <SelectItem value="UI/UX Design">UI/UX Design</SelectItem>
-                  <SelectItem value="Logo Design">Logo Design</SelectItem>
+                  {services.map(service => (
+                    <SelectItem key={service.title} value={service.title}>
+                      {service.title}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -187,7 +180,7 @@ const ContactForm = () => {
         )}
       </>
     </div>
-  );
-};
+  )
+}
 
-export default ContactForm;
+export default ContactForm
