@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/pagination"
 import { SITE } from "@/constants"
 import { getBlogPosts } from "@/app/data-access/posts/get-posts"
-import { generatePaginationItems } from "@/lib/generate-pagination-items" // You'll need to create this
+import { generatePaginationItems } from "@/lib/generate-pagination-items"
 
 export const metadata = {
   title: "Blog | Mohammed Haydar",
