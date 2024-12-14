@@ -47,7 +47,7 @@ export async function updatePostContent(
   try {
     const updatedPost = await db.posts.update({
       where: { id: postId, authorId: user.id },
-      data: { content, title, slug: slugify(title) }
+      data: { content, title, slug: slugify(title), published: true }
     })
     return updatedPost
   } catch (error) {

@@ -16,14 +16,21 @@ export default async function Blogs() {
   ) : (
     <>
       <AddBlogButton />
-      {blogPosts.map(post => (
-        <BlogPostCard
-          key={post.id}
-          id={post.id}
-          title={post.title}
-          publishedAt={String(post.publishedAt) || "Unknown Date"}
-        />
-      ))}
+      {blogPosts
+        .sort((a, b) => {
+          if (new Date(String(a.publishedAt)) > new Date(String(b.publishedAt))) {
+            return -1
+          }
+          return 1
+        })
+        .map(post => (
+          <BlogPostCard
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            publishedAt={String(post.publishedAt) || "Unknown Date"}
+          />
+        ))}
     </>
   )
 }
