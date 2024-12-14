@@ -49,7 +49,7 @@ export default function Header() {
           {user && (
             <>
               <Link
-                href={"/dashboard"}
+                href={"/dashboard/blogs"}
                 className="text-sm bg-lightSky/10 px-4 py-2 rounded-md hover:border-hoverColor hover:bg-hoverColor hover:text-black hoverEffect border border-lightSky/100"
               >
                 Dashboard

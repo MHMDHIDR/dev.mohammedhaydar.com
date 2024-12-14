@@ -1,17 +1,16 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
-import { useState, useEffect } from "react"
-import { EditorContent, useEditor } from "@tiptap/react"
-import { StarterKit } from "@tiptap/starter-kit"
-import { Image } from "@tiptap/extension-image"
+import AddBlogButton from "@/app/components/add-blog-btn"
+import { getPostById } from "@/app/data-access/posts/get-post-byId"
 import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
-import Container from "@/components/Container"
-import { editPost } from "./actions"
+import { Input } from "@/components/ui/input"
+import { Image } from "@tiptap/extension-image"
+import { EditorContent, useEditor } from "@tiptap/react"
+import { StarterKit } from "@tiptap/starter-kit"
 import { useParams, useRouter } from "next/navigation"
-import { getPostById } from "@/app/data-access/posts/get-post-byId"
-import AddBlogButton from "@/app/components/add-blog-btn"
+import { useEffect, useState } from "react"
+import { editPost } from "./actions"
 
 export default function EditBlogPost() {
   const { postId } = useParams<{ postId: string }>() as { postId: string }
@@ -66,7 +65,7 @@ export default function EditBlogPost() {
   }
 
   return !editor ? null : (
-    <Container>
+    <>
       <AddBlogButton />
       <form onSubmit={handleEditButton} className="space-y-4 mt-4">
         <div>
@@ -106,6 +105,6 @@ export default function EditBlogPost() {
         </div>
         <Button>Update Post</Button>
       </form>
-    </Container>
+    </>
   )
 }

@@ -15,7 +15,7 @@ export const navbarData = [
 ]
 
 export const dashboardNavbarData = [
-  { title: "Dashboard", href: "/dashboard" },
+  { title: "Dashboard", href: "/dashboard/blogs" },
   { title: "Blogs", href: "/dashboard/blogs" },
   { title: "Settings", href: "/dashboard/settings" }
 ]
