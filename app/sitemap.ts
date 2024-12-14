@@ -3,8 +3,8 @@ import { getBlogPosts } from "@/app/data-access/posts/get-posts"
 export const baseUrl = "https://mohammedhaydar.com"
 
 export default async function sitemap() {
-  const { blogs } = await getBlogPosts()
-  blogs.map(post => ({
+  const { posts } = await getBlogPosts()
+  posts.map(post => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: post.publishedAt
   }))
@@ -14,5 +14,5 @@ export default async function sitemap() {
     lastModified: new Date().toISOString().split("T")[0]
   }))
 
-  return [...routes, ...blogs]
+  return [...routes, ...posts]
 }
