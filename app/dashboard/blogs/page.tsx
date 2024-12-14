@@ -5,7 +5,7 @@ import { BlogPostCard } from "@/components/Card"
 import AddBlogButton from "@/app/components/add-blog-btn"
 
 export default async function Blogs() {
-  const { blogs: blogPosts, count } = await getBlogPosts()
+  const { posts: blogPosts, count } = await getBlogPosts()
 
   return (
     <Container>
