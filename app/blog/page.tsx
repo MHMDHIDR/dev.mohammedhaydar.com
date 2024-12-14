@@ -21,12 +21,12 @@ export const metadata = {
 export default async function BlogPage({
   searchParams
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined }
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  // Create URLSearchParams
+  const params = await searchParams
   const urlSearchParams = new URLSearchParams()
-  urlSearchParams.set("page", String(searchParams?.page ?? 1))
-  urlSearchParams.set("limit", String(searchParams?.limit ?? SITE.postPerPage))
+  urlSearchParams.set("page", String(params?.page ?? 1))
+  urlSearchParams.set("limit", String(params?.limit ?? SITE.postPerPage))
 
   const { posts: allBlogs, pagination: paginationInfo } = await getBlogPosts({
     isPublished: true,
