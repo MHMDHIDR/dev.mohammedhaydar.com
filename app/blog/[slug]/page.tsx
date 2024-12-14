@@ -8,6 +8,12 @@ import GoBackbtn from "@/app/components/go-back-btn"
 import { auth } from "@/auth"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { getBlogPosts } from "@/app/data-access/posts/get-posts"
+
+export async function generateStaticParams() {
+  const { blogs } = await getBlogPosts()
+  return blogs.map(blog => ({ slug: blog.slug }))
+}
 
 export async function generateMetadata({
   params

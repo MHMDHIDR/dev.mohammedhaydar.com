@@ -1,6 +1,7 @@
-import { auth, signIn } from "@/auth"
+import { auth } from "@/auth"
 import { IconBrandGoogleFilled } from "@tabler/icons-react"
 import { redirect } from "next/navigation"
+import { handleSignIn } from "./actions"
 
 export default async function SignIn() {
   const session = await auth()
@@ -10,14 +11,11 @@ export default async function SignIn() {
     redirect("/")
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSignIn: any = async () => {
-    "use server"
-    await signIn("google", { redirectTo: "/dashboard" })
-  }
-
   return (
-    <form action={handleSignIn} className="grid place-items-center my-80">
+    <form
+      action={handleSignIn as unknown as string}
+      className="grid place-items-center my-80"
+    >
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex gap-x-2.5"

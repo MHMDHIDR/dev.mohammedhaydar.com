@@ -8,11 +8,13 @@ import { useState } from "react"
 import { Logo } from "./Logo"
 import { usePathname } from "next/navigation"
 import { navbarData } from "@/constants"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import type { User } from "next-auth"
 
-export default function Header({ user }: { user: User | undefined }) {
+export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { data: session } = useSession()
+  const user = session?.user as User
   const pathname = usePathname() || ""
 
   return (

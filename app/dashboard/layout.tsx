@@ -8,13 +8,14 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
-  const user = session?.user
 
-  return !session ? (
+  if (!session || !session.user) {
     notFound()
-  ) : (
+  }
+
+  return (
     <>
-      <LayoutSidebar user={user} />
+      <LayoutSidebar user={session.user} />
       <main className="md:mt-20">{children}</main>
     </>
   )

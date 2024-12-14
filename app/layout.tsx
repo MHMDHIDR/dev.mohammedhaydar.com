@@ -6,7 +6,8 @@ import PageTransition from "@/components/PageTransition"
 import StairTransition from "@/components/StairTransition"
 import { Toaster } from "@/components/ui/toaster"
 import Footer from "@/components/Footer"
-import { auth } from "@/auth"
+import { Suspense } from "react"
+import { SessionProvider } from "next-auth/react"
 
 export const metadata: Metadata = {
   title: "Mohammed Ibrahim | A Full Stack Developer",
@@ -25,15 +26,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const session = await auth()
-  const user = session?.user
-
   return (
     <html lang="en">
       <body className={`${raleway.variable} antialiased text-white/80`}>
-        <Header user={user} />
+        <SessionProvider>
+          <Header />
+        </SessionProvider>
         <StairTransition />
-        <PageTransition>{children}</PageTransition>
+        <PageTransition>
+          <Suspense>{children}</Suspense>
+        </PageTransition>
         <Toaster />
         <Footer />
       </body>
