@@ -28,11 +28,7 @@ export default async function BlogPage({
   urlSearchParams.set("page", String(searchParams?.page ?? 1))
   urlSearchParams.set("limit", String(searchParams?.limit ?? SITE.postPerPage))
 
-  const {
-    posts: allBlogs,
-    count,
-    pagination: paginationInfo
-  } = await getBlogPosts({
+  const { posts: allBlogs, pagination: paginationInfo } = await getBlogPosts({
     isPublished: true,
     searchParams: urlSearchParams
   })

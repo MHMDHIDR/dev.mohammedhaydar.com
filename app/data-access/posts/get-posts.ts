@@ -14,7 +14,7 @@ export async function getBlogPosts(params?: {
   isPublished?: boolean
   searchParams?: URLSearchParams
 }): Promise<GetPostsResponse> {
-  let whereClause: any | undefined
+  let whereClause: { published: boolean } | undefined
 
   if (params?.isPublished !== undefined) {
     whereClause = { published: params.isPublished }
