@@ -15,9 +15,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <Container className="max-w-4xl pt-5">
+    <>
       <LayoutSidebar user={session.user} />
-      <main className="md:mt-20">{children}</main>
-    </Container>
+      <Container className="max-w-4xl pt-5">
+        <main className="md:mt-20">{children}</main>
+      </Container>
+    </>
   )
 }

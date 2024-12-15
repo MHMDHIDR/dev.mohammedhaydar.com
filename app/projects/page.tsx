@@ -21,6 +21,7 @@ import Link from "next/link"
 import { ArrowUpRight, Github } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { projects } from "./projects"
+import { Badge } from "@/components/ui/badge"
 
 export default function Project() {
   return (
@@ -34,13 +35,16 @@ export default function Project() {
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:space-x-8 group">
                       <div className="w-full md:w-1/2 order-2 md:order-1 mb-8 md:mb-0">
-                        <div className="space-y-3 md:space-y-6 mt-4 md:mt-0">
-                          <h2 className="text-4xl md:text-8xl leading-none font-extrabold text-transparent text-outline select-none">
+                        <div className="space-y-3 md:space-y-2 mt-4 md:mt-0">
+                          <h2 className="text-3xl md:text-6xl leading-none font-extrabold text-transparent text-outline select-none">
                             {index + 1}
                           </h2>
                           <h3 className="text-xl md:text-3xl font-bold leading-none text-white group-hover:text-primary hoverEffect">
-                            {project.category} project
+                            <Link href={project.liveUrl} target="_blank">
+                              {project.title}
+                            </Link>
                           </h3>
+                          <Badge>{project.category}</Badge>
                           <p className="text-white/60 text-sm md:text-base leading-6 md:leading-normal">
                             {project.description}
                           </p>
@@ -59,18 +63,18 @@ export default function Project() {
                           <div className="flex items-center space-x-4">
                             <TooltipProvider>
                               <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    size="icon"
-                                    className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
-                                  >
-                                    <Link href={project.liveUrl}>
+                                <Link href={project.liveUrl} target="_blank">
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
+                                    >
                                       <ArrowUpRight />
                                       <span className="sr-only">View Live Project</span>
-                                    </Link>
-                                  </Button>
-                                </TooltipTrigger>
+                                    </Button>
+                                  </TooltipTrigger>
+                                </Link>
                                 <TooltipContent className="bg-white text-black font-semibold">
                                   <p>View Live Project</p>
                                 </TooltipContent>
@@ -78,20 +82,20 @@ export default function Project() {
                             </TooltipProvider>
                             <TooltipProvider>
                               <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    size="icon"
-                                    className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
-                                  >
-                                    <Link href={project.githubUrl}>
+                                <Link href={project.githubUrl} target="_blank">
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="bg-lightSky/5 text-white/80 border border-lightSky/20 hover:bg-lightSky/20 hover:border-lightSky hover:text-hoverColor hoverEffect"
+                                    >
                                       <Github />
                                       <span className="sr-only">
                                         View Github Repository
                                       </span>
-                                    </Link>
-                                  </Button>
-                                </TooltipTrigger>
+                                    </Button>
+                                  </TooltipTrigger>
+                                </Link>
                                 <TooltipContent className="bg-white text-black font-semibold">
                                   <p>View Github Repository</p>
                                 </TooltipContent>
@@ -101,14 +105,18 @@ export default function Project() {
                         </div>
                       </div>
                       <div className="w-full md:w-1/2 order-1 md:order-2">
-                        <div className="relative h-72 sm:h-96 bg-gray-700 rounded-lg overflow-hidden">
+                        <Link
+                          href={project.liveUrl}
+                          target="_blank"
+                          className="relative h-72 sm:h-96 bg-gray-700 rounded-lg overflow-hidden flex"
+                        >
                           <Image
                             src={project.image}
                             alt={project.title}
                             fill
                             className="object-cover"
                           />
-                        </div>
+                        </Link>
                       </div>
                     </div>
                   </CardContent>

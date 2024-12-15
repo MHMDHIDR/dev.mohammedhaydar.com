@@ -62,7 +62,7 @@ export default async function BlogPost({
 
   return (
     <>
-      <div className="mx-auto w-full max-w-3xl px-4 flex justify-between">
+      <div className="mx-auto w-full max-w-4xl px-4 flex justify-between">
         <GoBackbtn />
         {session && (
           <Link
@@ -80,9 +80,12 @@ export default async function BlogPost({
           </span>
         </div>
 
-        <article id="article" role="article" className="prose mx-auto mt-8 max-w-3xl">
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        </article>
+        <article
+          id="article"
+          role="article"
+          className="prose mx-auto mt-8 min-w-full"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
       </BlogLayout>
     </>
   )

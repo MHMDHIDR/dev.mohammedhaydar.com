@@ -7,10 +7,11 @@ import { StarterKit } from "@tiptap/starter-kit"
 import { Image as TipTapImage } from "@tiptap/extension-image"
 import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
-import { createPost, updatePostContent } from "./actions"
+import { createPost } from "./actions"
 import { useRouter } from "next/navigation"
 import { uploadToS3 } from "@/lib/s3-upload"
 import Image from "next/image"
+import { updatePostContent } from "../actions"
 
 export default function NewBlogPost() {
   const { push } = useRouter()
@@ -28,7 +29,9 @@ export default function NewBlogPost() {
   const editor = useEditor({
     extensions: [StarterKit, TipTapImage.configure({ inline: true, allowBase64: true })],
     content: "",
-    editorProps: { attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto" } },
+    editorProps: {
+      attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto leading-loose" }
+    },
     onUpdate: ({ editor }) => setContent(editor.getHTML()),
     immediatelyRender: false
   })
