@@ -5,7 +5,8 @@ import { getPostById } from "@/app/data-access/posts/get-post-byId"
 import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Image } from "@tiptap/extension-image"
+import { Image as TipTapImage } from "@tiptap/extension-image"
+import Image from "next/image"
 import { EditorContent, useEditor } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
 import { useParams, useRouter } from "next/navigation"
@@ -31,7 +32,7 @@ export default function EditBlogPost() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
-    extensions: [StarterKit, Image.configure({ inline: true, allowBase64: true })],
+    extensions: [StarterKit, TipTapImage.configure({ inline: true, allowBase64: true })],
     content,
     editorProps: {
       attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto leading-loose" }
@@ -157,10 +158,12 @@ export default function EditBlogPost() {
         {/* Optional: Preview uploaded images */}
         <div className="flex gap-2">
           {uploadedImages.map((img, index) => (
-            <img
+            <Image
               key={index}
               src={img.preview}
               alt={`Preview ${index}`}
+              width={80}
+              height={80}
               className="w-20 h-20 object-cover"
             />
           ))}
