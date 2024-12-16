@@ -6,6 +6,13 @@ export function EditorMenu({ editor }: { editor: Editor }) {
     return null
   }
 
+  const addImage = () => {
+    const url = window.prompt("Enter the URL of the image:")
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run()
+    }
+  }
+
   return (
     <div className="flex flex-wrap gap-2 p-2 bg-gray-700 rounded-t-md dark:bg-gray-700">
       <Button
@@ -100,6 +107,13 @@ export function EditorMenu({ editor }: { editor: Editor }) {
         type="button"
       >
         Bullet List
+      </Button>
+      <Button
+        className="px-2 py-1 text-sm dark:bg-gray-700"
+        onClick={addImage}
+        type="button"
+      >
+        Image URL
       </Button>
     </div>
   )

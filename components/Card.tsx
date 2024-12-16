@@ -1,17 +1,19 @@
 import Link from "next/link"
 import { formatDate } from "@/lib/format-date"
 import { CalendarClock } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface CardProps {
   id?: string
   title: string
   slug?: string
   publishedAt: string
+  classNames?: string
 }
 
-export function BlogPostCard({ id, title, slug, publishedAt }: CardProps) {
+export function BlogPostCard({ id, title, slug, publishedAt, classNames }: CardProps) {
   return (
-    <li className="my-6 list-none">
+    <li className={cn("my-6 list-none", classNames)}>
       <Link
         href={id ? `/dashboard/blogs/${id}` : `/blog/${slug}`}
         className="inline-block text-lg font-medium text-blue-600 decoration-dashed underline-offset-4 hover:underline"

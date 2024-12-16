@@ -35,7 +35,9 @@ export default function EditBlogPost() {
     extensions: [StarterKit, TipTapImage.configure({ inline: true, allowBase64: true })],
     content,
     editorProps: {
-      attributes: { class: "min-h-72 max-h-72 p-3 overflow-y-auto leading-loose" }
+      attributes: {
+        class: "min-h-72 max-h-72 p-3 overflow-y-auto leading-loose"
+      }
     },
     onUpdate: ({ editor }) => {
       const newContent = editor.getHTML()
@@ -55,6 +57,17 @@ export default function EditBlogPost() {
 
       if (editor) {
         editor.commands.setContent(post.content)
+        // get and set uploaded images from content and add to uploadedImages setUploadedImages()
+        post.content.match(/src="([^"]*)"/g)?.forEach((src: string) => {
+          const url = src.replace('src="', "").replace('"', "")
+          setUploadedImages(prev => [
+            ...prev,
+            {
+              file: new File([], url),
+              preview: url
+            }
+          ])
+        })
       }
     }
     fetchPost()
@@ -155,16 +168,15 @@ export default function EditBlogPost() {
           </label>
         </div>
 
-        {/* Optional: Preview uploaded images */}
         <div className="flex gap-2">
           {uploadedImages.map((img, index) => (
-            <Image
+            <img
               key={index}
               src={img.preview}
               alt={`Preview ${index}`}
               width={80}
               height={80}
-              className="w-20 h-20 object-cover"
+              className="w-20 h-20 object-cover rounded-md"
             />
           ))}
         </div>

@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
         hostname: "technodevlabs.s3.eu-west-2.amazonaws.com",
         protocol: "https",
         port: ""
+      },
+      {
+        hostname: "s3.eu-west-2.amazonaws.com",
+        protocol: "https",
+        port: ""
       }
     ]
   }
