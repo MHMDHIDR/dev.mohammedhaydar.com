@@ -6,33 +6,124 @@ import { EditorMenu } from "@/components/Editor"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Image as TipTapImage } from "@tiptap/extension-image"
-import Image from "next/image"
-import { EditorContent, useEditor } from "@tiptap/react"
+import { Link } from "@tiptap/extension-link"
+import { EditorContent, useEditor, Extension } from "@tiptap/react"
 import { StarterKit } from "@tiptap/starter-kit"
+import { Node } from "@tiptap/core"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { editPost } from "./actions"
 import { uploadToS3 } from "@/lib/s3-upload"
 import { updatePostContent } from "../actions"
+import { UploadedMediaButton } from "@/components/uploaded-media-button"
+import { MAX_FILE_SIZE } from "@/constants"
+
+// Constants for file handling
+const SUPPORTED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "video/mp4",
+  "video/quicktime",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/mp3"
+]
+
+const Video = Node.create({
+  name: "video",
+  group: "block",
+  atom: true,
+
+  addAttributes() {
+    return {
+      src: {
+        default: null
+      },
+      controls: {
+        default: true
+      },
+      width: {
+        default: 320
+      }
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: "video"
+      }
+    ]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["video", { ...HTMLAttributes, controls: true }]
+  }
+})
+
+const Audio = Node.create({
+  name: "audio",
+  group: "block",
+  atom: true,
+
+  addAttributes() {
+    return {
+      src: {
+        default: null
+      },
+      controls: {
+        default: true
+      }
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: "audio"
+      }
+    ]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["audio", { ...HTMLAttributes, controls: true }]
+  }
+})
 
 export default function EditBlogPost() {
   const { postId } = useParams<{ postId: string }>() as { postId: string }
-
   const { push } = useRouter()
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [published, setPublished] = useState(false)
-  const [uploadedImages, setUploadedImages] = useState<
-    {
-      file: File
-      preview: string
-    }[]
+  const [uploadedMedia, setUploadedMedia] = useState<
+    (
+      | {
+          preview: string
+          type: string
+          isNew: boolean
+        }
+      | {
+          file: File
+          preview: string
+          type: string
+          isNew: boolean
+        }
+    )[]
   >([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
-    extensions: [StarterKit, TipTapImage.configure({ inline: true, allowBase64: true })],
+    extensions: [
+      StarterKit,
+      TipTapImage.configure({ inline: true, allowBase64: true }),
+      Link.configure({ openOnClick: false }),
+      Video,
+      Audio
+    ],
     content,
     editorProps: {
       attributes: {
@@ -57,38 +148,96 @@ export default function EditBlogPost() {
 
       if (editor) {
         editor.commands.setContent(post.content)
-        // get and set uploaded images from content and add to uploadedImages setUploadedImages()
-        post.content.match(/src="([^"]*)"/g)?.forEach((src: string) => {
-          const url = src.replace('src="', "").replace('"', "")
-          setUploadedImages(prev => [
-            ...prev,
-            {
-              file: new File([], url),
-              preview: url
+
+        // Extract and set saved media from content
+        const mediaMatches = post.content.match(/src="([^"]*)"/g)
+        if (mediaMatches) {
+          const mediaFiles = mediaMatches.map((src: string) => {
+            const url = src.replace('src="', "").replace('"', "")
+            const type = getMediaType(url)
+            return {
+              preview: url,
+              type: type,
+              isNew: false
             }
-          ])
-        })
+          })
+          setUploadedMedia(mediaFiles)
+        }
       }
     }
     fetchPost()
   }, [postId, editor])
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Helper function to determine media type
+  const getMediaType = (url: string): string => {
+    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+    const videoExtensions = [".mp4", ".mov"]
+    const audioExtensions = [".mp3", ".wav"]
+
+    const ext = url.toLowerCase().split(".").pop()
+    if (imageExtensions.some(e => e === `.${ext}`)) return "image"
+    if (videoExtensions.some(e => e === `.${ext}`)) return "video"
+    if (audioExtensions.some(e => e === `.${ext}`)) return "audio"
+    return "image"
+  }
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files) return
 
-    const newImagePreviews = Array.from(files).map(file => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }))
+    const newMediaPreviews = await Promise.all(
+      Array.from(files).map(async file => {
+        // Validate file size
+        if (file.size > MAX_FILE_SIZE) {
+          alert(`File ${file.name} exceeds ${MAX_FILE_SIZE / 1024 / 1024} MB limit`)
+          return null
+        }
 
-    setUploadedImages(prev => [...prev, ...newImagePreviews])
+        // Validate file type
+        if (!SUPPORTED_TYPES.includes(file.type)) {
+          alert(`Unsupported file type: ${file.name}`)
+          return null
+        }
 
-    // Add images to editor
-    newImagePreviews.forEach(img => {
-      editor?.commands.setImage({
-        src: img.preview
+        const fileType = file.type.split("/")[0]
+        const preview = URL.createObjectURL(file)
+
+        return {
+          file,
+          preview,
+          type: fileType,
+          isNew: true
+        }
       })
+    )
+
+    const validMediaPreviews = newMediaPreviews.filter(media => media !== null)
+    setUploadedMedia(prev => [...prev, ...validMediaPreviews])
+
+    validMediaPreviews.forEach(media => {
+      if (!media) return
+
+      if (media.type === "image") {
+        editor?.chain().focus().setImage({ src: media.preview }).run()
+      } else if (media.type === "video") {
+        editor
+          ?.chain()
+          .focus()
+          .insertContent({
+            type: "video",
+            attrs: { src: media.preview }
+          })
+          .run()
+      } else if (media.type === "audio") {
+        editor
+          ?.chain()
+          .focus()
+          .insertContent({
+            type: "audio",
+            attrs: { src: media.preview }
+          })
+          .run()
+      }
     })
   }
 
@@ -96,16 +245,27 @@ export default function EditBlogPost() {
     e.preventDefault()
 
     try {
-      // Upload images to S3
-      const imageUrls = await Promise.all(
-        uploadedImages.map(img => uploadToS3(img.file, postId))
+      let updatedContent = content
+
+      // Only upload media files that are new (isNew: true) and have a File object
+      const newMedia = uploadedMedia.filter(
+        (media): media is { file: File; preview: string; type: string; isNew: boolean } =>
+          media.isNew === true && "file" in media && media.file instanceof File
       )
 
-      // Replace temporary image URLs with S3 URLs
-      let updatedContent = content
-      uploadedImages.forEach((img, index) => {
-        updatedContent = updatedContent.replace(img.preview, imageUrls[index])
-      })
+      if (newMedia.length > 0) {
+        const mediaUrls = await Promise.all(
+          newMedia.map(async media => {
+            const uploadResult = await uploadToS3(media.file, postId)
+            return uploadResult
+          })
+        )
+
+        // Replace only new media URLs with S3 URLs
+        newMedia.forEach((media, index) => {
+          updatedContent = updatedContent.replace(media.preview, mediaUrls[index].url)
+        })
+      }
 
       // Prepare form data
       const formData = new FormData()
@@ -115,8 +275,6 @@ export default function EditBlogPost() {
 
       // Update post
       const editedPostId = await editPost(formData, postId)
-
-      // Update content with final S3 image URLs if needed
       await updatePostContent(editedPostId, title, updatedContent)
 
       push(`/dashboard/blogs/${editedPostId}`)
@@ -148,8 +306,8 @@ export default function EditBlogPost() {
             <input
               type="file"
               ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
+              onChange={handleFileUpload}
+              accept="image/*,video/mp4,video/quicktime,audio/mpeg,audio/wav"
               multiple
               className="hidden"
             />
@@ -158,7 +316,7 @@ export default function EditBlogPost() {
               onClick={() => fileInputRef.current?.click()}
               className="my-2"
             >
-              Upload Images
+              Upload Media
             </Button>
             <EditorContent
               className="border border-white/10 focus:border-primary"
@@ -169,16 +327,7 @@ export default function EditBlogPost() {
         </div>
 
         <div className="flex gap-2">
-          {uploadedImages.map((img, index) => (
-            <img
-              key={index}
-              src={img.preview}
-              alt={`Preview ${index}`}
-              width={80}
-              height={80}
-              className="w-20 h-20 object-cover rounded-md"
-            />
-          ))}
+          <UploadedMediaButton savedMedia={uploadedMedia} />
         </div>
 
         <div>

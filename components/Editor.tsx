@@ -13,6 +13,13 @@ export function EditorMenu({ editor }: { editor: Editor }) {
     }
   }
 
+  const addLink = () => {
+    const url = window.prompt("Enter the URL:")
+    if (url) {
+      editor.chain().focus().setLink({ href: url }).run()
+    }
+  }
+
   return (
     <div className="flex flex-wrap gap-2 p-2 bg-gray-700 rounded-t-md dark:bg-gray-700">
       <Button
@@ -107,6 +114,15 @@ export function EditorMenu({ editor }: { editor: Editor }) {
         type="button"
       >
         Bullet List
+      </Button>
+      <Button
+        className={`px-2 py-1 text-sm ${
+          editor.isActive("link") ? "bg-gray-300 dark:bg-gray-900" : "dark:bg-gray-700"
+        }`}
+        onClick={addLink}
+        type="button"
+      >
+        Link
       </Button>
       <Button
         className="px-2 py-1 text-sm dark:bg-gray-700"

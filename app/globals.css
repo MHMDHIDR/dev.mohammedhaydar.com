@@ -151,8 +151,11 @@
     word-wrap: break-word;
   }
 
-  pre > code {
-    white-space: pre;
+  .prose pre {
+    @apply overflow-x-auto text-white;
+    > code {
+      @apply whitespace-pre;
+    }
   }
 }
 

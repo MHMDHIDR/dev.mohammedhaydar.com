@@ -12,18 +12,21 @@ import { useRouter } from "next/navigation"
 import { uploadToS3 } from "@/lib/s3-upload"
 import Image from "next/image"
 import { updatePostContent } from "../actions"
+import { MAX_FILE_SIZE } from "@/constants"
 
 export default function NewBlogPost() {
   const { push } = useRouter()
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [published, setPublished] = useState(false)
-  const [uploadedImages, setUploadedImages] = useState<
+  const [uploadedMedia, setUploadedMedia] = useState<
     {
       file: File
       preview: string
+      type: string
     }[]
   >([])
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
@@ -36,22 +39,64 @@ export default function NewBlogPost() {
     immediatelyRender: false
   })
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files
     if (!files) return
 
-    const newImagePreviews = Array.from(files).map(file => ({
-      file,
-      preview: URL.createObjectURL(file)
-    }))
+    const newMediaPreviews = await Promise.all(
+      Array.from(files).map(async file => {
+        try {
+          // Validate file size before processing
+          if (file.size > MAX_FILE_SIZE) {
+            alert(`File ${file.name} exceeds ${MAX_FILE_SIZE / 1024 / 1024} MB limit`)
+            return null
+          }
 
-    setUploadedImages(prev => [...prev, ...newImagePreviews])
+          const fileType = file.type.split("/")[0]
+          let preview = ""
 
-    // Add images to editor
-    newImagePreviews.forEach(img => {
-      editor?.commands.setImage({
-        src: img.preview
+          if (fileType === "image") {
+            preview = URL.createObjectURL(file)
+          } else if (fileType === "video") {
+            preview = URL.createObjectURL(file)
+          } else if (fileType === "audio") {
+            preview = "/audio-play.svg"
+          }
+
+          return {
+            file,
+            preview,
+            type: fileType
+          }
+        } catch (error) {
+          console.error("Error processing file:", error)
+          return null
+        }
       })
+    )
+
+    // Filter out any null entries (failed uploads)
+    const validMediaPreviews = newMediaPreviews.filter(media => media !== null)
+
+    setUploadedMedia(prev => [...prev, ...validMediaPreviews])
+
+    // Add files to editor based on type
+    validMediaPreviews.forEach(media => {
+      if (!media) return
+
+      if (media.type === "image") {
+        editor?.commands.setImage({
+          src: media.preview
+        })
+      } else if (media.type === "video") {
+        editor?.commands.setContent(
+          editor.getHTML() + `<video src="${media.preview}" controls></video>`
+        )
+      } else if (media.type === "audio") {
+        editor?.commands.setContent(
+          editor.getHTML() + `<audio src="${media.preview}" controls></audio>`
+        )
+      }
     })
   }
 
@@ -61,8 +106,11 @@ export default function NewBlogPost() {
     try {
       const newPostId = await createPost()
 
-      const imageUrls = await Promise.all(
-        uploadedImages.map(img => uploadToS3(img.file, newPostId))
+      const mediaUrls = await Promise.all(
+        uploadedMedia.map(async media => {
+          const uploadResult = await uploadToS3(media.file, newPostId)
+          return uploadResult
+        })
       )
 
       const formData = new FormData()
@@ -71,8 +119,8 @@ export default function NewBlogPost() {
       formData.append("published", published ? "true" : "false")
 
       let updatedContent = content
-      uploadedImages.forEach((img, index) => {
-        updatedContent = updatedContent.replace(img.preview, imageUrls[index])
+      uploadedMedia.forEach((media, index) => {
+        updatedContent = updatedContent.replace(media.preview, mediaUrls[index].url)
       })
 
       await updatePostContent(newPostId, title, updatedContent)
@@ -105,8 +153,8 @@ export default function NewBlogPost() {
           <input
             type="file"
             ref={fileInputRef}
-            onChange={handleImageUpload}
-            accept="image/*"
+            onChange={handleFileUpload}
+            accept="image/*,video/mp4,video/quicktime,audio/mpeg,audio/wav"
             multiple
             className="hidden"
           />
@@ -115,7 +163,7 @@ export default function NewBlogPost() {
             onClick={() => fileInputRef.current?.click()}
             className="my-2"
           >
-            Upload Images
+            Upload Media
           </Button>
           <EditorContent
             className="border border-white/10 focus:border-primary"
@@ -127,16 +175,40 @@ export default function NewBlogPost() {
       </div>
 
       <div className="flex gap-2">
-        {uploadedImages.map((img, index) => (
-          <Image
-            key={index}
-            src={img.preview}
-            alt={`Preview ${index}`}
-            width={80}
-            height={80}
-            className="w-20 h-20 object-cover rounded-md"
-          />
-        ))}
+        {uploadedMedia.map((media, index) => {
+          if (media.type === "image") {
+            return (
+              <Image
+                key={index}
+                src={media.preview}
+                alt={`Preview ${index}`}
+                width={80}
+                height={80}
+                className="w-20 h-20 object-cover rounded-md"
+              />
+            )
+          } else if (media.type === "video") {
+            return (
+              <video
+                key={index}
+                src={media.preview}
+                width={80}
+                height={80}
+                className="w-20 h-20 object-cover rounded-md"
+              />
+            )
+          } else if (media.type === "audio") {
+            return (
+              <div
+                key={index}
+                className="w-20 h-20 bg-gray-200 rounded-md flex items-center justify-center"
+              >
+                🎵 Audio
+              </div>
+            )
+          }
+          return null
+        })}
       </div>
 
       <div>

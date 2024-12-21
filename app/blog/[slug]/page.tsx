@@ -9,6 +9,7 @@ import { auth } from "@/auth"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getBlogPosts } from "@/app/data-access/posts/get-posts"
+import PreCopyHandler from "./copy-handler"
 
 export async function generateStaticParams() {
   const { posts } = await getBlogPosts()
@@ -25,7 +26,6 @@ export async function generateMetadata({
   if (!post) return {}
 
   const { title, publishedAt } = post
-  // const ogImage = image ? image : `${baseUrl}/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
@@ -36,13 +36,11 @@ export async function generateMetadata({
       type: "article",
       publishedTime: String(new Date(publishedAt!.toISOString())),
       url: `${baseUrl}/blog/${post.slug}`
-      // ,images: [{ url: ogImage }]
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: title
-      // ,images: [ogImage]
     }
   }
 }
@@ -62,6 +60,7 @@ export default async function BlogPost({
 
   return (
     <>
+      <PreCopyHandler />
       <div className="mx-auto w-full max-w-4xl px-4 flex justify-between">
         <GoBackbtn />
         {session && (

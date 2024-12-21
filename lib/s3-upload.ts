@@ -1,8 +1,15 @@
 "use server"
 
+import {
+  MAX_FILE_SIZE,
+  SUPPORTED_AUDIO_TYPES,
+  SUPPORTED_IMAGE_TYPES,
+  SUPPORTED_VIDEO_TYPES
+} from "@/constants"
 import { env } from "@/env"
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
 import crypto from "crypto"
+import sharp from "sharp"
 
 const s3Client = new S3Client({
   region: env.AWS_REGION,
@@ -13,14 +20,42 @@ const s3Client = new S3Client({
 })
 
 export async function uploadToS3(file: File, postId: string) {
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(`File size must be less than ${MAX_FILE_SIZE / 1024 / 1024} MB`)
+  }
+
   const fileExtension = file.name.split(".").pop()
   const uniqueSuffix = crypto.randomBytes(8).toString("hex")
   const filename = `${postId}/${uniqueSuffix}.${fileExtension}`
 
+  let processedBuffer: Buffer
+
+  if (SUPPORTED_IMAGE_TYPES.includes(file.type)) {
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+
+    processedBuffer = await sharp(buffer)
+      .webp({ quality: 80 })
+      .resize({
+        width: 1920,
+        height: 1080,
+        fit: "inside",
+        withoutEnlargement: true
+      })
+      .toBuffer()
+  } else if (
+    SUPPORTED_VIDEO_TYPES.includes(file.type) ||
+    SUPPORTED_AUDIO_TYPES.includes(file.type)
+  ) {
+    processedBuffer = Buffer.from(await file.arrayBuffer())
+  } else {
+    throw new Error("Unsupported file type")
+  }
+
   const uploadParams = {
     Bucket: process.env.AWS_S3_BUCKET_NAME!,
     Key: filename,
-    Body: new Uint8Array(await file.arrayBuffer()),
+    Body: processedBuffer,
     ContentType: file.type
   }
 
@@ -28,10 +63,12 @@ export async function uploadToS3(file: File, postId: string) {
     const command = new PutObjectCommand(uploadParams)
     await s3Client.send(command)
 
-    // Construct public URL (adjust based on your S3 bucket configuration)
-    const imageUrl = `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${filename}`
+    const fileUrl = `https://s3.${process.env.AWS_REGION}.amazonaws.com/${process.env.AWS_S3_BUCKET_NAME}/${filename}`
 
-    return imageUrl
+    return {
+      url: fileUrl,
+      type: file.type
+    }
   } catch (error) {
     console.error("S3 Upload Error:", error)
     throw error
