@@ -157,6 +157,10 @@
       @apply whitespace-pre;
     }
   }
+
+  .prose video {
+    @apply rounded-lg w-full shadow-md;
+  }
 }
 
 @layer base {

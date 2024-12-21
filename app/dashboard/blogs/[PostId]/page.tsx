@@ -45,7 +45,7 @@ const Video = Node.create({
         default: true
       },
       width: {
-        default: 320
+        default: 600
       }
     }
   },
