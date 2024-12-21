@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import Image from "next/image"
 
 interface UploadedMediaButtonProps {
   savedMedia: {
@@ -19,11 +20,12 @@ const MediaGrid = ({ savedMedia }: UploadedMediaButtonProps) => {
       {savedMedia.map((media, index) => {
         if (media.type === "image") {
           return (
-            <img
+            <Image
               key={index}
               src={media.preview}
               alt={`Preview ${index}`}
               className="aspect-square object-cover rounded-md"
+              width={200}
             />
           )
         } else if (media.type === "video") {

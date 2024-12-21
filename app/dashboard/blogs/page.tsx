@@ -1,4 +1,3 @@
-import { BlogLayout } from "@/app/components/blog-layout"
 import { BlogPostCard } from "@/components/Card"
 import {
   Pagination,
