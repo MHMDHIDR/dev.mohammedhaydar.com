@@ -9,7 +9,7 @@ import { auth } from "@/auth"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getBlogPosts } from "@/app/data-access/posts/get-posts"
-import PreCopyHandler from "./copy-handler"
+import { SyntaxHighlighter } from "@/app/components/syntax-highlighter"
 
 export async function generateStaticParams() {
   const { posts } = await getBlogPosts()
@@ -60,7 +60,6 @@ export default async function BlogPost({
 
   return (
     <>
-      <PreCopyHandler />
       <div className="mx-auto w-full max-w-4xl px-4 flex justify-between">
         <GoBackbtn />
         {session && (
@@ -79,12 +78,7 @@ export default async function BlogPost({
           </span>
         </div>
 
-        <article
-          id="article"
-          role="article"
-          className="prose mx-auto mt-8 min-w-full"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        <SyntaxHighlighter content={post.content} />
       </BlogLayout>
     </>
   )

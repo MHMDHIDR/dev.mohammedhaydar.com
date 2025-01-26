@@ -2,6 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prism.js Theme and Line Numbers */
+pre[class*="language-"] {
+  position: relative;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 0.5em;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family: "JetBrains Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Line Numbers */
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 1em;
+  font-size: 100%;
+  left: 0.8em;
+  width: 3em; /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid #999;
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
+
+/* Rest of your existing CSS */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -152,10 +202,11 @@
   }
 
   .prose pre {
-    @apply overflow-x-auto text-white;
-    > code {
-      @apply whitespace-pre;
-    }
+    @apply overflow-x-auto text-white bg-[#1e1e1e] p-4 rounded-lg my-4;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-sm font-mono;
   }
 
   .prose video {

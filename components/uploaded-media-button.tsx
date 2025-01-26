@@ -26,6 +26,7 @@ const MediaGrid = ({ savedMedia }: UploadedMediaButtonProps) => {
               alt={`Preview ${index}`}
               className="aspect-square object-cover rounded-md"
               width={200}
+              height={200}
             />
           )
         } else if (media.type === "video") {
