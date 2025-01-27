@@ -1,0 +1,41 @@
+<>
+  <span id="type-writer" class="text-primary"></span>
+  <script>
+    const words = [
+      "Full-stack Developer",
+      "Web Developer",
+      "Web Designer",
+      "Software Engineer",
+    ];
+    let wordIndex = 0;
+    let letterIndex = 0;
+    let isDeleting = false;
+
+    function type() {
+      const currentWord = words[wordIndex];
+      const typeWriter = document.getElementById("type-writer");
+      let speed = 100;
+
+      if (!isDeleting && letterIndex <= currentWord.length) {
+        typeWriter!.textContent = currentWord.substring(0, letterIndex);
+        letterIndex++;
+      } else if (isDeleting && letterIndex >= 0) {
+        typeWriter!.textContent = currentWord.substring(0, letterIndex);
+        letterIndex--;
+      }
+
+      if (!isDeleting && letterIndex === currentWord.length) {
+        isDeleting = true;
+        speed = 500;
+      } else if (isDeleting && letterIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+        speed = 200;
+      }
+
+      setTimeout(type, speed);
+    }
+
+    type();
+  </script>
+</>
