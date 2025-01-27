@@ -1,5 +1,5 @@
-import { baseUrl } from "@/app/sitemap"
-import { getBlogPosts } from "@/app/data-access/posts/get-posts"
+import { baseUrl } from '@/app/sitemap'
+import { getBlogPosts } from '@/app/data-access/posts/get-posts'
 
 export async function GET() {
   const { posts: allBlogs } = await getBlogPosts()
@@ -16,11 +16,12 @@ export async function GET() {
         `<item>
           <title>${post.title}</title>
           <link>${baseUrl}/blog/${post.slug}</link>
-          <description>${post.title || ""}</description>
+          <description>${post.title || ''}</description>
           <pubDate>${new Date(post.publishedAt!).toUTCString()}</pubDate>
+          <p><![CDATA[${post.content}]]></p>
         </item>`
     )
-    .join("\n")
+    .join('\n')
 
   const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
@@ -34,7 +35,7 @@ export async function GET() {
 
   return new Response(rssFeed, {
     headers: {
-      "Content-Type": "text/xml"
-    }
+      'Content-Type': 'text/xml',
+    },
   })
 }
